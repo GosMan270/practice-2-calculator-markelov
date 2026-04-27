@@ -1,7 +1,5 @@
-using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
 using CalculatorMarkelov.Core;
 
 namespace CalculatorMarkelov.Wpf;
@@ -18,53 +16,38 @@ public partial class MainWindow : Window
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        txtFirstNumber.Focus();
-        txtStatus.Text = "Готов к работе. Введите значения и выберите операцию.";
+        txtExpression.Focus();
+        txtExpression.SelectAll();
+        txtStatus.Text = "Готов к работе. Введите арифметическое выражение целиком.";
     }
 
     private void BtnCalculate_Click(object sender, RoutedEventArgs e)
     {
-        var operation = GetSelectedOperation();
+        var expression = txtExpression.Text;
 
-        if (_calculator.TryCalculate(
-                txtFirstNumber.Text,
-                txtSecondNumber.Text,
-                operation,
+        if (_calculator.TryEvaluateExpression(
+                expression,
                 out var result,
                 out var errorMessage))
         {
             txtResult.Text = FormatResult(result);
-            txtStatus.Text = BuildSuccessMessage(operation, result);
+            txtStatus.Text = BuildSuccessMessage(expression, result);
             txtStatus.Foreground = System.Windows.Media.Brushes.DarkGreen;
             return;
         }
 
         txtResult.Clear();
-        txtStatus.Text = errorMessage ?? "Произошла неизвестная ошибка вычисления.";
+        txtStatus.Text = errorMessage ?? "Произошла неизвестная ошибка при вычислении выражения.";
         txtStatus.Foreground = System.Windows.Media.Brushes.Firebrick;
     }
 
     private void BtnClear_Click(object sender, RoutedEventArgs e)
     {
-        txtFirstNumber.Clear();
-        txtSecondNumber.Clear();
+        txtExpression.Clear();
         txtResult.Clear();
-        cmbOperation.SelectedIndex = 0;
-        txtStatus.Text = "Поля очищены. Можно вводить новые данные.";
+        txtStatus.Text = "Выражение очищено. Можно вводить новое выражение.";
         txtStatus.Foreground = System.Windows.Media.Brushes.SlateGray;
-        txtFirstNumber.Focus();
-    }
-
-    private string GetSelectedOperation()
-    {
-        if (cmbOperation.SelectedItem is ComboBoxItem item &&
-            item.Content is string operation &&
-            !string.IsNullOrWhiteSpace(operation))
-        {
-            return operation;
-        }
-
-        return "+";
+        txtExpression.Focus();
     }
 
     private static string FormatResult(double value)
@@ -87,8 +70,8 @@ public partial class MainWindow : Window
         return value.ToString("G15", CultureInfo.InvariantCulture);
     }
 
-    private static string BuildSuccessMessage(string operation, double result)
+    private static string BuildSuccessMessage(string expression, double result)
     {
-        return $"Операция \"{operation}\" выполнена успешно. Результат: {FormatResult(result)}";
+        return $"Выражение \"{expression}\" вычислено успешно. Результат: {FormatResult(result)}";
     }
 }

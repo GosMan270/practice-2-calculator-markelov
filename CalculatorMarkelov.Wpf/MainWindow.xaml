@@ -63,14 +63,14 @@
                 CornerRadius="14"
                 Padding="20">
             <StackPanel>
-                <TextBlock Text="Калькулятор"
+                <TextBlock Text="Калькулятор арифметических выражений"
                            FontSize="28"
                            FontWeight="Bold"
                            Foreground="#1C2736"/>
                 <TextBlock Margin="0,8,0,0"
                            FontSize="14"
                            Foreground="#5B6B7F"
-                           Text="Арифметические операции: +, -, *, /, ^"/>
+                           Text="Введите выражение целиком. Поддерживаются несколько операций подряд, скобки, приоритет операций, степени и унарный минус."/>
             </StackPanel>
         </Border>
 
@@ -88,33 +88,57 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="Первое число" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="txtFirstNumber"
+                    <TextBlock Text="Введите выражение" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="txtExpression"
                              Style="{StaticResource InputStyle}"
+                             Height="44"
+                             AcceptsReturn="False"
+                             TextWrapping="NoWrap"
                              VerticalContentAlignment="Center"
-                             ToolTip="Введите первое число"/>
+                             Padding="10,0"
+                             FontFamily="Consolas"
+                             ToolTip="Например: -2^2+6"
+                             Text="-2^2+6"/>
 
-                    <TextBlock Text="Операция" Style="{StaticResource LabelStyle}"/>
-                    <ComboBox x:Name="cmbOperation"
-                              Style="{StaticResource InputStyle}"
-                              SelectedIndex="0">
-                        <ComboBoxItem Content="+"/>
-                        <ComboBoxItem Content="-"/>
-                        <ComboBoxItem Content="*"/>
-                        <ComboBoxItem Content="/"/>
-                        <ComboBoxItem Content="^"/>
-                    </ComboBox>
+                    <Border Margin="0,0,0,14"
+                            Padding="12"
+                            Background="#F8FAFC"
+                            BorderBrush="#E2E8F0"
+                            BorderThickness="1"
+                            CornerRadius="10">
+                        <StackPanel>
+                            <TextBlock Text="Примеры выражений"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="#223046"/>
+                            <TextBlock Margin="0,8,0,0"
+                                       FontSize="13"
+                                       Foreground="#5B6B7F"
+                                       Text="2+3*4 = 14"/>
+                            <TextBlock FontSize="13"
+                                       Foreground="#5B6B7F"
+                                       Text="(2+3)*4 = 20"/>
+                            <TextBlock FontSize="13"
+                                       Foreground="#5B6B7F"
+                                       Text="-2^2+6 = 2"/>
+                            <TextBlock FontSize="13"
+                                       Foreground="#5B6B7F"
+                                       Text="2^(-2) = 0,25"/>
+                            <TextBlock Margin="0,10,0,0"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="#64748B"
+                                       Text="Сначала выполняются степени и действия в скобках, затем умножение и деление, затем сложение и вычитание."/>
+                        </StackPanel>
+                    </Border>
 
-                    <TextBlock Text="Второе число" Style="{StaticResource LabelStyle}"/>
-                    <TextBox x:Name="txtSecondNumber"
-                             Style="{StaticResource InputStyle}"
-                             VerticalContentAlignment="Center"
-                             ToolTip="Введите второе число"/>
+
 
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <Button x:Name="btnCalculate"
-                                Content="Вычислить"
+                                Content="Вычислить выражение"
                                 Style="{StaticResource ActionButtonStyle}"
+                                IsDefault="True"
                                 Click="BtnCalculate_Click"/>
                         <Button x:Name="btnClear"
                                 Content="Очистить"
@@ -164,7 +188,7 @@
                                    FontSize="13"
                                    TextWrapping="Wrap"
                                    Foreground="#5B6B7F"
-                                   Text="Введите два числа, выберите операцию и нажмите кнопку «Вычислить». Для десятичных значений можно использовать точку или запятую."/>
+                                   Text="Калькулятор работает не только с двумя числами, а с полными арифметическими выражениями. Можно вводить несколько операций подряд, использовать скобки, унарный минус, а также точку или запятую в десятичных числах."/>
                     </StackPanel>
                 </Border>
             </Grid>
@@ -176,7 +200,7 @@
                 BorderThickness="1"
                 CornerRadius="12"
                 Padding="14">
-            <TextBlock Text="Практическая работа 2 • WPF-приложение + библиотека классов + модульные тесты"
+            <TextBlock Text="Практическая работа 2 • Калькулятор арифметических выражений на WPF"
                        FontSize="13"
                        Foreground="#35507A"
                        HorizontalAlignment="Center"/>

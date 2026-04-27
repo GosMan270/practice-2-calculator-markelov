@@ -192,6 +192,55 @@ public class CalculatorEngineTests
         Assert.ThrowsException<FormatException>(() => NumberParser.Parse(input));
     }
 
+    [DataTestMethod]
+    [DataRow("2+3*4", 14.0)]
+    [DataRow("(2+3)*4", 20.0)]
+    [DataRow("-2^2+6", 2.0)]
+    [DataRow("2^(-2)", 0.25)]
+    [DataRow("3 + 4 * 2 / (1 - 5)^2", 3.5)]
+    [DataRow("1,5+2,5", 4.0)]
+    public void EvaluateExpression_WithValidExpression_ReturnsCorrectResult(string expression, double expected)
+    {
+        var actual = _calculator.EvaluateExpression(expression);
+
+        Assert.AreEqual(expected, actual, 0.0000001);
+    }
+
+    [TestMethod]
+    public void Calculate_WithExpressionArgument_ReturnsCorrectResult()
+    {
+        var actual = _calculator.Calculate("(2+3)*4");
+
+        Assert.AreEqual(20.0, actual, 0.0000001);
+    }
+
+    [TestMethod]
+    public void EvaluateExpression_WithMissingClosingParenthesis_ThrowsInvalidExpressionException()
+    {
+        Assert.ThrowsException<InvalidExpressionException>(() => _calculator.EvaluateExpression("(2+3*4"));
+    }
+
+    [TestMethod]
+    public void TryEvaluateExpression_WithInvalidExpression_ReturnsFalseAndErrorMessage()
+    {
+        var success = _calculator.TryEvaluateExpression("2++", out var result, out var errorMessage);
+
+        Assert.IsFalse(success);
+        Assert.AreEqual(0.0, result, 0.0000001);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(errorMessage));
+    }
+
+    [TestMethod]
+    public void TryCalculate_WithExpressionDivisionByZero_ReturnsFalseAndErrorMessage()
+    {
+        var success = _calculator.TryCalculate("10/(5-5)", out var result, out var errorMessage);
+
+        Assert.IsFalse(success);
+        Assert.AreEqual(0.0, result, 0.0000001);
+        Assert.IsFalse(string.IsNullOrWhiteSpace(errorMessage));
+        StringAssert.Contains(errorMessage!, "Division by zero");
+    }
+
     [TestMethod]
     public void UnsupportedOperationException_MessageContainsOperation()
     {
